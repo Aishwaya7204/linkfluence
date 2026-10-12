@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% if mode == "register" %}
+  {% set page_title = "Create your account" %}
+  {% set page_intro = "Build a private workspace for your creator campaigns." %}
+{% else %}
+  {% set page_title = "Welcome back" %}
+  {% set page_intro = "Log in to continue to your campaign workspace." %}
+{% endif %}
+{% block title %}{{ page_title }} | LinkFluence{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><span class="eyebrow">LINKFLUENCE WORKSPACE</span><h1>Better creator partnerships start here.</h1><p>Keep campaign briefs, match results, and saved creator shortlists together in your account.</p><div class="auth-points"><span>✦ Campaigns in one place</span><span>✦ Explainable creator matching</span><span>✦ Shortlists you can revisit</span></div></div>
+  <form class="auth-card" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <span class="eyebrow">{{ "GET STARTED" if mode == "register" else "ACCOUNT LOGIN" }}</span>
+    <h2>{{ page_title }}</h2><p class="muted">{{ page_intro }}</p>
+    <label>Email address<input type="email" name="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></label>
+    <label>Password<input type="password" name="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" minlength="8" required placeholder="At least 8 characters"></label>
+    {% if mode == "register" %}<label>Confirm password<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required placeholder="Enter the password again"></label>{% endif %}
+    <button class="btn primary full" type="submit">{{ "Create account" if mode == "register" else "Log in" }}</button>
+    {% if mode == "register" %}<p class="auth-switch">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>{% else %}<p class="auth-switch">New to LinkFluence? <a href="{{ url_for('auth.register') }}">Create an account</a></p>{% endif %}
+  </form>
+</section>
+{% endblock %}

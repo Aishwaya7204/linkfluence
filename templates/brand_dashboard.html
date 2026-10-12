@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Brand Dashboard | LinkFluence{% endblock %}
+{% block content %}
+<section class="page-heading dashboard-heading"><div><span class="eyebrow">YOUR WORKSPACE</span><h1>Brand dashboard</h1><p>Track your campaign briefs and generated creator shortlists.</p></div><a class="btn primary" href="{{ url_for('campaigns.create_brief') }}">+ New campaign</a></section>
+<div class="stats-grid"><div class="stat-card"><span>Creator profiles</span><b>{{ stats.creators }}</b><small>Available in demo directory</small></div><div class="stat-card"><span>Campaign briefs</span><b>{{ stats.campaigns }}</b><small>Created in this database</small></div><div class="stat-card"><span>Saved match scores</span><b>{{ stats.matches }}</b><small>Across campaign shortlists</small></div></div>
+<section class="panel"><div class="section-heading"><div><h2>Campaigns</h2><p>Open a campaign to view its ranked creator matches.</p></div></div>
+{% if campaigns %}
+<div class="table-wrap"><table><thead><tr><th>Campaign</th><th>Brand</th><th>Platform</th><th>Budget</th><th>Shortlist</th><th>Actions</th></tr></thead><tbody>{% for c in campaigns %}<tr><td><strong>{{ c.title }}</strong><small>{{ c.niche }}</small></td><td>{{ c.brand_name }}</td><td>{{ c.platform }}</td><td>₹{{ "{:,.0f}".format(c.budget) }}</td><td>{{ c.shortlist_count }} saved</td><td><a class="text-link" href="{{ url_for('campaigns.campaign_matches', campaign_id=c.id) }}">Matches</a> · <a class="text-link" href="{{ url_for('campaigns.campaign_shortlist', campaign_id=c.id) }}">Shortlist</a></td></tr>{% endfor %}</tbody></table></div>
+{% else %}<div class="empty-state"><h3>No campaigns yet</h3><p>Create your first campaign brief to generate creator matches.</p><a class="btn primary" href="{{ url_for('campaigns.create_brief') }}">Create brief</a></div>{% endif %}
+</section>
+{% endblock %}

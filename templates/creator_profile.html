@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ creator.name }} | LinkFluence{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('creators.creators') }}">← Back to creators</a>
+<section class="profile-layout">
+  <div class="profile-photo"><img src="{{ creator.image_url }}" alt="Demo portrait for {{ creator.name }}" onerror="this.style.display='none'"></div>
+  <div class="profile-info"><span class="tag">{{ creator.niche }}</span><h1>{{ creator.name }}</h1><p class="muted">{{ creator.handle }} · {{ creator.location }}</p><p>{{ creator.bio }}</p>
+    <div class="metric-grid"><div class="metric"><b>{{ "{:,}".format(creator.followers) }}</b><span>Followers</span></div><div class="metric"><b>{{ creator.engagement }}%</b><span>Engagement rate</span></div><div class="metric"><b>{{ creator.platform }}</b><span>Primary platform</span></div><div class="metric"><b>₹{{ "{:,.0f}".format(creator.rate) }}</b><span>Demo starting rate</span></div></div>
+    <a class="btn primary" href="{{ url_for('campaigns.create_brief') }}">Create a matching brief</a>
+  </div>
+</section>
+<p class="notice">This is a demonstration profile. Metrics, rates, and images are sample data and are not verified.</p>
+{% endblock %}

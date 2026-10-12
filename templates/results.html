@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | LinkFluence{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">MATCH RESULTS</span><h1>{{ title }}</h1><p>{{ message }}</p></section>
+{% if matches %}
+<div class="match-note">Match scores are transparent heuristic estimates based on niche, platform, budget, follower target, and engagement. They are not guarantees of campaign performance.</div>
+{% if campaign_id %}<div class="page-actions"><a class="btn secondary" href="{{ url_for('campaigns.campaign_shortlist', campaign_id=campaign_id) }}">View saved shortlist</a></div>{% endif %}
+<div class="match-list">
+{% for item in matches %}
+  {% set c = item.creator %}
+  <article class="match-card"><img src="{{ c.image_url }}" alt="Demo portrait for {{ c.name }}" onerror="this.style.display='none'"><div class="match-main"><div class="match-title"><div><span class="tag">{{ c.niche }}</span><h3>{{ c.name }}</h3><p class="muted">{{ c.handle }} · {{ c.platform }} · {{ c.location }}</p></div><div class="score"><strong>{{ item.score }}%</strong><small>Match score</small></div></div><p>{{ c.bio }}</p><div class="creator-stats"><span><b>{{ "{:,}".format(c.followers) }}</b><small>Followers</small></span><span><b>{{ c.engagement }}%</b><small>Engagement</small></span><span><b>₹{{ "{:,.0f}".format(c.rate) }}</b><small>Demo rate</small></span></div>
+  <details class="score-details"><summary>Why this match? See score breakdown</summary><div class="score-breakdown">{% for part in item.breakdown %}<div><span>{{ part.label }}</span><strong>{{ part.score }} / {{ part.max }}</strong><progress value="{{ part.score }}" max="{{ part.max }}"></progress></div>{% endfor %}</div></details>
+  <div class="card-actions"><a class="text-link" href="{{ url_for('creators.creator_profile', creator_id=c.id) }}">View creator profile →</a>{% if campaign_id %}<form method="post" action="{{ url_for('campaigns.campaign_shortlist', campaign_id=campaign_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="creator_id" value="{{ c.id }}">{% if c.id in shortlisted_ids %}<button class="btn secondary" name="action" value="remove">Remove saved</button>{% else %}<button class="btn primary" name="action" value="save">Save to shortlist</button>{% endif %}</form>{% endif %}</div></div></article>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><h3>No matches available</h3><p>Try creating a campaign with a different niche, platform, or budget.</p></div>
+{% endif %}
+<div class="page-actions"><a class="btn primary" href="{{ url_for('campaigns.create_brief') }}">Create another brief</a><a class="btn secondary" href="{{ url_for('brand_dashboard') }}">Go to dashboard</a></div>
+{% endblock %}

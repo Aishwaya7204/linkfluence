@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Discover Creators | LinkFluence{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">CREATOR DIRECTORY</span><h1>Discover your next partner</h1><p>Search creator profiles and narrow the list to your campaign needs.</p></section>
+<form class="filter-bar" method="get">
+  <input type="search" name="q" placeholder="Search name, handle, or bio..." value="{{ q }}">
+  <select name="niche"><option value="">All niches</option>{% for n in niches %}<option value="{{ n }}" {% if n == selected_niche %}selected{% endif %}>{{ n }}</option>{% endfor %}</select>
+  <select name="platform"><option value="">All platforms</option>{% for p in platforms %}<option value="{{ p }}" {% if p == selected_platform %}selected{% endif %}>{{ p }}</option>{% endfor %}</select>
+  <select name="location"><option value="">All locations</option>{% for city in locations %}<option value="{{ city }}" {% if city == selected_location %}selected{% endif %}>{{ city }}</option>{% endfor %}</select>
+  <input type="number" name="min_followers" min="0" placeholder="Min followers" value="{{ min_followers or '' }}">
+  <input type="number" name="max_followers" min="0" placeholder="Max followers" value="{{ max_followers or '' }}">
+  <input type="number" name="min_engagement" min="0" step="0.1" placeholder="Min engagement %" value="{{ min_engagement or '' }}">
+  <input type="number" name="max_rate" min="0" step="1" placeholder="Max rate ₹" value="{{ max_rate or '' }}">
+  <select name="sort"><option value="engagement" {% if selected_sort == 'engagement' %}selected{% endif %}>Sort: Engagement</option><option value="followers" {% if selected_sort == 'followers' %}selected{% endif %}>Sort: Followers</option><option value="rate" {% if selected_sort == 'rate' %}selected{% endif %}>Sort: Lowest rate</option><option value="name" {% if selected_sort == 'name' %}selected{% endif %}>Sort: Name</option></select>
+  <button class="btn primary" type="submit">Apply filters</button>
+  <a class="btn secondary" href="{{ url_for('creators.creators') }}">Reset</a>
+</form>
+<div class="results-count">{{ creators|length }} creator(s) found</div>
+<div class="creator-grid">
+{% for creator in creators %}
+  <article class="creator-card">
+    <img src="{{ creator.image_url }}" alt="Demo portrait for {{ creator.name }}" onerror="this.style.display='none'">
+    <div class="creator-card-body"><span class="tag">{{ creator.niche }}</span><h3>{{ creator.name }}</h3><p class="muted">{{ creator.handle }} · {{ creator.location }}</p><p>{{ creator.bio }}</p><div class="creator-stats"><span><b>{{ "{:,}".format(creator.followers) }}</b><small>Followers</small></span><span><b>{{ creator.engagement }}%</b><small>Engagement</small></span><span><b>₹{{ "{:,.0f}".format(creator.rate) }}</b><small>Demo rate</small></span></div><a class="btn secondary full" href="{{ url_for('creators.creator_profile', creator_id=creator.id) }}">View profile</a></div>
+  </article>
+{% else %}
+  <div class="empty-state"><h3>No creators found</h3><p>Try changing the search or filters.</p></div>
+{% endfor %}
+</div>
+{% endblock %}

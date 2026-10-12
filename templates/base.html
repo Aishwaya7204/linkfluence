@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}LinkFluence{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="navbar">
+  <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">L</span> LinkFluence</a>
+  <nav>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('creators.creators') }}">Discover Creators</a>
+    {% if session.get('user_id') %}
+    <a href="{{ url_for('campaigns.create_brief') }}">Create Brief</a>
+    <a href="{{ url_for('brand_dashboard') }}">Dashboard</a>
+    <span class="nav-user">{{ session.get('user_email') }}</span>
+    <form class="nav-logout" method="post" action="{{ url_for('auth.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Log out</button></form>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}">Log in</a>
+    <a class="nav-register" href="{{ url_for('auth.register') }}">Create account</a>
+    {% endif %}
+  </nav>
+</header>
+<main class="page">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">
+  <div><strong>LinkFluence</strong><p>Better creator partnerships, powered by smart matching.</p></div>
+  <span>Hackathon prototype · Demo data</span>
+</footer>
+</body>
+</html>

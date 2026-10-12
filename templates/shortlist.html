@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Saved shortlist | LinkFluence{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">CAMPAIGN SHORTLIST</span><h1>{{ campaign.title }}</h1><p>Creators you saved for {{ campaign.brand_name }}.</p></section>
+<div class="page-actions"><a class="btn secondary" href="{{ url_for('campaigns.campaign_matches', campaign_id=campaign.id) }}">Back to matches</a></div>
+{% if creators %}
+<form method="get" action="{{ url_for('campaigns.compare_creators', campaign_id=campaign.id) }}">
+  <div class="panel"><div class="section-heading"><div><h2>Choose up to four to compare</h2><p>Select two or more creators for a side-by-side comparison.</p></div><button class="btn primary" type="submit">Compare selected</button></div>
+  <div class="creator-grid">{% for c in creators %}<article class="creator-card"><img src="{{ c.image_url }}" alt="Demo portrait for {{ c.name }}" onerror="this.style.display='none'"><div class="creator-card-body"><label class="compare-choice"><input type="checkbox" name="creator_id" value="{{ c.id }}"> Include {{ c.name }}</label><span class="tag">{{ c.niche }}</span><h3>{{ c.name }}</h3><p class="muted">{{ c.handle }} · {{ c.platform }} · {{ c.location }}</p><div class="creator-stats"><span><b>{{ "{:,}".format(c.followers) }}</b><small>Followers</small></span><span><b>{{ c.engagement }}%</b><small>Engagement</small></span><span><b>₹{{ "{:,.0f}".format(c.rate) }}</b><small>Demo rate</small></span></div></div></article>{% endfor %}</div></div>
+</form>
+{% else %}<div class="empty-state"><h3>Your shortlist is empty</h3><p>Save creators from the match results to collect options for this campaign.</p><a class="btn primary" href="{{ url_for('campaigns.campaign_matches', campaign_id=campaign.id) }}">Browse matches</a></div>{% endif %}
+{% endblock %}

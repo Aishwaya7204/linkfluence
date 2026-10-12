@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Compare creators | LinkFluence{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">CREATOR COMPARISON</span><h1>{{ campaign.title }}</h1><p>Compare saved creators on the metrics that matter to your campaign.</p></section>
+{% if creators|length >= 2 %}
+<div class="panel"><div class="table-wrap"><table class="comparison-table"><thead><tr><th>Metric</th>{% for c in creators %}<th>{{ c.name }}<small>{{ c.handle }}</small></th>{% endfor %}</tr></thead><tbody>
+<tr><th>Niche</th>{% for c in creators %}<td>{{ c.niche }}</td>{% endfor %}</tr><tr><th>Platform</th>{% for c in creators %}<td>{{ c.platform }}</td>{% endfor %}</tr><tr><th>Location</th>{% for c in creators %}<td>{{ c.location }}</td>{% endfor %}</tr><tr><th>Followers</th>{% for c in creators %}<td>{{ "{:,}".format(c.followers) }}</td>{% endfor %}</tr><tr><th>Engagement</th>{% for c in creators %}<td>{{ c.engagement }}%</td>{% endfor %}</tr><tr><th>Demo rate</th>{% for c in creators %}<td>₹{{ "{:,.0f}".format(c.rate) }}</td>{% endfor %}</tr></tbody></table></div></div>
+{% else %}
+<div class="notice">Select at least two saved creators to see the comparison. You can compare up to four at a time.</div>
+<form method="get" action="{{ url_for('campaigns.compare_creators', campaign_id=campaign.id) }}"><div class="panel"><div class="section-heading"><div><h2>Select creators</h2><p>Choose at least two. Only creators saved to this campaign are available.</p></div><button class="btn primary" type="submit">Compare</button></div>
+{% if saved %}<div class="selection-list">{% for c in saved %}<label><input type="checkbox" name="creator_id" value="{{ c.id }}"> {{ c.name }} · {{ c.platform }} · {{ "{:,}".format(c.followers) }} followers · ₹{{ "{:,.0f}".format(c.rate) }}</label>{% endfor %}</div>{% else %}<p>No creators have been saved yet.</p>{% endif %}</div></form>
+{% endif %}
+<div class="page-actions"><a class="btn secondary" href="{{ url_for('campaigns.campaign_shortlist', campaign_id=campaign.id) }}">Back to shortlist</a><a class="btn secondary" href="{{ url_for('campaigns.campaign_matches', campaign_id=campaign.id) }}">View matches</a></div>
+{% endblock %}

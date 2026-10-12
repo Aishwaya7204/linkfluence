@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Create Campaign Brief | LinkFluence{% endblock %}
+{% block content %}
+<section class="page-heading"><span class="eyebrow">CAMPAIGN BUILDER</span><h1>Tell us about your campaign</h1><p>Share your goals and get a ranked shortlist of potential creators.</p></section>
+<form class="brief-form" method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="form-intro"><span class="feature-icon">✧</span><div><h2>Campaign details</h2><p>Complete the fields below to calculate creator matches.</p></div></div>
+  <div class="form-grid">
+    <label>Brand name<input name="brand_name" required maxlength="100" placeholder="e.g. Bloom Beauty"></label>
+    <label>Campaign title<input name="title" required maxlength="120" placeholder="e.g. Summer launch"></label>
+    <label>Creator niche<select name="niche" required><option value="">Choose a niche</option>{% for n in ["Fashion","Technology","Food","Fitness","Lifestyle","Gaming","Beauty","Travel","Education"] %}<option>{{ n }}</option>{% endfor %}</select></label>
+    <label>Preferred platform<select name="platform" required><option value="">Choose a platform</option>{% for p in ["Instagram","YouTube","TikTok","LinkedIn"] %}<option>{{ p }}</option>{% endfor %}</select></label>
+    <label>Budget (₹)<input type="number" name="budget" min="1" step="1" required placeholder="10000"></label>
+    <label>Target followers<input type="number" name="target_followers" min="0" step="1" required value="30000"></label>
+    <label class="wide">Campaign description<textarea name="description" rows="5" required maxlength="2000" placeholder="What are you promoting? What should the creator deliver?"></textarea></label>
+  </div>
+  <button class="btn primary" type="submit">Find creator matches ↗</button>
+</form>
+{% endblock %}
